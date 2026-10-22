@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LocalDrop</title>
+<link rel="icon" href="/static/images/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/app.css">
+<script src="/static/js/common.js"></script>
+</head>
+<body data-paired="{{ 'yes' if paired else 'no' }}">
+<header class="topbar">
+  <div class="brand"><img src="/static/images/logo.svg" alt="">LocalDrop</div>
+  <span class="spacer"></span>
+  <span class="pill off hidden" id="conn">Connected</span>
+  <button class="btn icon-btn ghost" id="theme" aria-label="Toggle dark mode">◐</button>
+</header>
+
+<main class="pair hidden" id="pair-view">
+  <h1>Connect to your PC</h1>
+  <p class="muted">Scan the QR code shown on the PC, or type the 6-digit PIN from its screen.</p>
+  <input id="pin" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" aria-label="6-digit PIN">
+  <button class="btn primary" id="pair-go">Connect</button>
+  <p class="notice err hidden" id="pair-err" role="alert"></p>
+</main>
+
+<main class="phone hidden" id="app-view">
+  <section class="hero">
+    <button class="btn" id="pick">Select Files</button>
+    <p>Files go straight to your PC over this Wi-Fi network. Nothing is uploaded to the internet.</p>
+    <p class="row" style="justify-content:center;margin-top:10px"><button class="btn sm hidden" id="pick-folder" style="width:auto;font-size:.95rem;padding:6px 14px">Select Folder</button></p>
+  </section>
+  <input type="file" id="file-input" multiple class="hidden">
+  <input type="file" id="folder-input" webkitdirectory class="hidden">
+  <div class="drop hidden" id="drop"><strong>Drop files here</strong><span class="muted small">or use the button above</span></div>
+  <p class="notice small hidden" id="keep-open">Keep this page open and the screen on until transfers finish.</p>
+
+  <section class="card" id="queue-card" style="grid-column:auto">
+    <header><h2>Sending</h2><span class="spacer"></span><button class="btn sm ghost" id="clear-queue">Clear finished</button></header>
+    <ul class="list" id="queue"></ul>
+  </section>
+
+  <section class="card" style="grid-column:auto">
+    <header><div class="tabs" role="tablist" style="width:100%">
+      <button role="tab" aria-selected="true" id="tab-recent">Recent</button>
+      <button role="tab" aria-selected="false" id="tab-pc">PC Files</button>
+    </div></header>
+    <div id="recent"><ul class="list" id="recent-list"></ul></div>
+    <div id="pc" class="hidden">
+      <div class="row small" id="crumbs" style="margin-bottom:8px"></div>
+      <ul class="list" id="files"></ul>
+      <div class="row" style="margin-top:12px"><button class="btn primary" id="dl-selected" disabled>Download selected</button><button class="btn ghost" id="refresh">Refresh</button></div>
+    </div>
+  </section>
+  <p class="muted small" style="text-align:center"><span id="device"></span> · <a href="#" id="logout">Disconnect</a></p>
+</main>
+<script src="/static/js/device.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="ld-admin-token" content="{{ admin_token }}">
+<title>LocalDrop</title>
+<link rel="icon" href="/static/images/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/static/css/app.css">
+<script src="/static/js/common.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><img src="/static/images/logo.svg" alt="">LocalDrop</div>
+  <span class="spacer"></span>
+  <span class="pill off" id="status">Sharing is off</span>
+  <button class="btn icon-btn ghost" id="theme" aria-label="Toggle dark mode">◐</button>
+</header>
+
+<main class="grid">
+  <section class="card" id="card-connect" aria-labelledby="h-connect">
+    <header><h2 id="h-connect">Connect your phone</h2><span class="spacer"></span><button class="btn primary" id="toggle">Start sharing</button></header>
+    <div class="connect">
+      <img class="qr placeholder hidden" id="qr" alt="QR code to connect your phone">
+      <div class="qr placeholder" id="qr-off">Start sharing to show the QR code</div>
+      <div>
+        <div class="small muted">Open this address on your phone</div>
+        <div class="url" id="url">—</div>
+        <div class="small muted" style="margin-top:12px">…or enter this PIN when asked</div>
+        <div class="pin" id="pin" aria-label="Pairing PIN"></div>
+        <div class="row">
+          <button class="btn sm" id="copy" disabled>Copy address</button>
+          <button class="btn sm" id="regen" disabled>New code</button>
+          <select id="ip" class="hidden" style="width:auto" aria-label="Network address"></select>
+        </div>
+      </div>
+    </div>
+    <p class="notice" id="warn">Only start sharing on a Wi-Fi network you trust. While sharing is on, anyone on the network who has the QR code or PIN can send files to this PC and download from your shared folder. Stop sharing when you are done.</p>
+    <p class="notice err hidden" id="err" role="alert"></p>
+    <details style="margin-top:12px"><summary class="small">Phone cannot connect?</summary>
+      <ul class="small muted">
+        <li>Both devices must be on the <b>same Wi-Fi</b>. Guest networks and “client isolation” block this.</li>
+        <li>Windows Firewall: allow Python on <b>Private</b> networks (Windows asks the first time), and set your Wi-Fi to the Private profile.</li>
+        <li>If the Wi-Fi has no internet, turn off mobile data on the phone so it does not bypass the Wi-Fi.</li>
+        <li>Turn off VPNs on both devices. See README.md for details.</li>
+      </ul></details>
+  </section>
+
+  <section class="card" id="card-share" aria-labelledby="h-share">
+    <header><h2 id="h-share">Share files with your phone</h2><span class="spacer"></span><button class="btn sm" id="open-shared">Open folder</button></header>
+    <div class="drop" id="drop" tabindex="0" role="button"><strong>Drop files here</strong><span class="muted small">They are copied into your shared folder, and show up under “PC Files” on the phone</span></div>
+    <input type="file" id="pick" multiple class="hidden">
+    <ul class="list" id="shared" style="margin-top:10px"></ul>
+  </section>
+
+  <section class="card wide" id="card-transfers" aria-labelledby="h-tr">
+    <header><h2 id="h-tr">Transfers</h2><span class="spacer"></span>
+      <div class="tabs" role="tablist" id="tr-tabs" style="min-width:280px">
+        <button role="tab" data-t="active" aria-selected="true">Active</button>
+        <button role="tab" data-t="done" aria-selected="false">Completed</button>
+        <button role="tab" data-t="failed" aria-selected="false">Failed</button>
+      </div>
+      <button class="btn sm ghost" id="clear">Clear history</button></header>
+    <ul class="list" id="transfers"></ul>
+    <p class="small muted" style="margin-top:8px">Failed uploads can be retried from the phone, which still has the file.</p>
+  </section>
+
+  <section class="card" id="card-devices" aria-labelledby="h-dev">
+    <header><h2 id="h-dev">Paired devices</h2></header>
+    <ul class="list" id="devices"></ul>
+  </section>
+
+  <section class="card" id="card-settings" aria-labelledby="h-set">
+    <header><h2 id="h-set">Settings</h2></header>
+    <label class="field">Incoming files folder<input type="text" id="s-upload"></label>
+    <label class="field">Shared folder (what the phone can download)<input type="text" id="s-shared"></label>
+    <div class="row"><label class="field" style="flex:1">Max file size (MB, 0 = no limit)<input type="number" id="s-max" min="0"></label>
+    <label class="field" style="flex:1">Simultaneous transfers<input type="number" id="s-conc" min="1" max="16"></label></div>
+    <label class="field">Port (applies after restart)<input type="number" id="s-port" min="1024" max="65535"></label>
+    <div class="switch hidden" id="startup-row"><input type="checkbox" id="s-startup"><label for="s-startup">Start LocalDrop when I sign in (sharing always stays off until you start it)</label></div>
+    <div class="row"><button class="btn primary" id="save">Save settings</button><button class="btn" id="open-up">Open incoming folder</button></div>
+    <p class="small muted" id="disk" style="margin-top:10px"></p>
+  </section>
+</main>
+
+<dialog id="confirm">
+  <h2>Start sharing on this network?</h2>
+  <p>LocalDrop will accept connections from other devices on <b id="c-net"></b>. Only devices with the QR code or PIN can transfer files.</p>
+  <p class="muted small">Avoid public or shared Wi-Fi (cafés, hotels, campuses). You can stop sharing at any time and access ends immediately.</p>
+  <div class="row" style="justify-content:flex-end;margin-top:16px"><button class="btn" id="c-no">Cancel</button><button class="btn primary" id="c-yes">Start sharing</button></div>
+</dialog>
+<script src="/static/js/dashboard.js"></script>
+</body>
+</html>
